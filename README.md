@@ -6,8 +6,7 @@ A steerer is a linear map that modifies keypoint descriptions as if they were ob
 
 <img src="example_images/method.png" width="500">
 
-See the example notebook [demo.ipynb](demo.ipynb) for simple matching examples.
-Before running it, create a new virtual environment of your preference (e.g. conda) with `python>=3.9`, `jupyter notebook` and GPU-enabled PyTorch.
+For running the code, create a new virtual environment of your preference (e.g. conda) with `python>=3.9`, `jupyter notebook` and GPU-enabled PyTorch.
 Then install the `rotation_steerers` package using pip (this automatically installs DeDoDe from GitHub as well, see `setup.py`): 
 ```
 pip install .
@@ -16,6 +15,69 @@ The weights are uploaded to [releases](https://github.com/georg-bn/rotation-stee
 ```
 bash download_weights.sh
 ```
+Matching example using a steerer:
+```python
+from DeDoDe import dedode_detector_L, dedode_descriptor_B
+from rotation_steerers.steerers import DiscreteSteerer, ContinuousSteerer
+from rotation_steerers.matchers.max_similarity import MaxSimilarityMatcher, ContinuousMaxSimilarityMatcher
+
+# C4-steering
+detector = dedode_detector_L(weights=torch.load("model_weights/dedode_detector_L.pth"))
+descriptor = dedode_descriptor_B(weights=torch.load("model_weights/B_C4_Perm_descriptor_setting_C.pth"))
+steerer = DiscreteSteerer(generator=torch.load("model_weights/B_C4_Perm_steerer_setting_C.pth"))
+matcher = MaxSimilarityMatcher(steerer=steerer, steerer_order=4)
+
+matches_A, matches_B, batch_ids = matcher.match(
+    keypoints_A, descriptions_A,
+    keypoints_B, descriptions_B,
+    P_A = P_A, P_B = P_B,
+    normalize = True, inv_temp=20, threshold = 0.01
+)
+matches_A, matches_B = matcher.to_pixel_coords(
+    matches_A, matches_B, 
+    h_A, w_A, h_B, w_B,
+)
+
+# C8-steering with discretized steerer (recommended)
+detector = dedode_detector_L(weights=torch.load("model_weights/dedode_detector_L.pth"))
+descriptor = dedode_descriptor_B(weights=torch.load("model_weights/B_C4_Perm_descriptor_setting_C.pth"))
+steerer = DiscreteSteerer(
+    generator=torch.matrix_exp(
+        0.25*3.1415*torch.load("model_weights/B_C4_Perm_steerer_setting_C.pth")
+    )
+)
+matcher = MaxSimilarityMatcher(steerer=steerer, steerer_order=8)
+
+matches_A, matches_B, batch_ids = matcher.match(
+    keypoints_A, descriptions_A,
+    keypoints_B, descriptions_B,
+    P_A = P_A, P_B = P_B,
+    normalize = True, inv_temp=20, threshold = 0.01
+)
+matches_A, matches_B = matcher.to_pixel_coords(
+    matches_A, matches_B, 
+    h_A, w_A, h_B, w_B,
+)
+
+# SO(2)-steering with arbitrary angles (not recommended, but fun)
+detector = dedode_detector_L(weights=torch.load("model_weights/dedode_detector_L.pth"))
+descriptor = dedode_descriptor_B(weights=torch.load("model_weights/B_SO2_Spread_descriptor_setting_B.pth"))
+steerer = ContinuousSteerer(generator=torch.load("model_weights/B_SO2_Spread_steerer_setting_B.pth"))
+matcher = MaxSimilarityMatcher(steerer=steerer, angles=[0.2, 1.2879, 3.14])
+
+matches_A, matches_B, batch_ids = matcher.match(
+    keypoints_A, descriptions_A,
+    keypoints_B, descriptions_B,
+    P_A = P_A, P_B = P_B,
+    normalize = True, inv_temp=20, threshold = 0.01
+)
+matches_A, matches_B = matcher.to_pixel_coords(
+    matches_A, matches_B, 
+    h_A, w_A, h_B, w_B,
+)
+```
+
+See the example notebook [demo.ipynb](demo.ipynb) for more simple matching examples.
 
 We will publish training code and further model weights shortly.
 
