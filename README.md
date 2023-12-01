@@ -58,7 +58,9 @@ matcher = MaxSimilarityMatcher(steerer=steerer, steerer_order=4)
 # steerer = ContinuousSteerer(generator=torch.load("model_weights/B_SO2_Spread_steerer_setting_B.pth"))
 # matcher = ContinuousMaxSimilarityMatcher(steerer=steerer, angles=[0.2, 1.2879, 3.14])
 
-# Match descriptions (API as in DeDoDe)
+# Describe keypoints and match descriptions (API as in DeDoDe)
+descriptions_A = descriptor.describe_keypoints_from_path(im_A_path, keypoints_A)["descriptions"]
+descriptions_B = descriptor.describe_keypoints_from_path(im_B_path, keypoints_B)["descriptions"]
 matches_A, matches_B, batch_ids = matcher.match(
     keypoints_A, descriptions_A,
     keypoints_B, descriptions_B,
