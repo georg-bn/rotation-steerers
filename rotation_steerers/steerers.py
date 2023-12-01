@@ -1,19 +1,35 @@
 import torch
 import torch.nn.functional as F
 
-class SteererDiscrete(torch.nn.Module):
-    def __init__(self, model):
+
+class DiscreteSteerer(torch.nn.Module):
+    def __init__(self, generator):
         super().__init__()
-        self.model = model
+        self.generator = generator
 
     def forward(self, x):
-        return self.model(x)
+        return F.linear(x, self.generator)
 
-    def steer_descriptions(self, descriptions, transformation_params, normalize = False):
-        for _ in range(transformation_params["nbr_rotations"]):
-            descriptions = self.model(descriptions)
+    def steer_descriptions(self, descriptions, steerer_power=1, normalize=False):
+        for _ in range(steerer_power):
+            descriptions = self.forward(descriptions)
         if normalize:
-            descriptions = F.normalize(descriptions, dim = -1)
+            descriptions = F.normalize(descriptions, dim=-1)
+        return descriptions
+
+
+class ContinuousSteerer(torch.nn.Module):
+    def __init__(self, generator):
+        super().__init__()
+        self.generator = generator
+
+    def forward(self, x, angle_radians):
+        return F.linear(x, torch.matrix_exp(angle_radians * self.generator))
+
+    def steer_descriptions(self, descriptions, angle_radians, normalize=False):
+        descriptions = self.forward(descriptions, angle_radians)
+        if normalize:
+            descriptions = F.normalize(descriptions, dim=-1)
         return descriptions
 
 

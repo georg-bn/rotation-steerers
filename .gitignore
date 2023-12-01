@@ -1,8 +1,9 @@
 # vim
 tags
-*.scp
-*.scr
-*.scw
+*.swp
+*.swq
+*.swr
+*.sww
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
