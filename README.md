@@ -44,11 +44,14 @@ matcher = MaxSimilarityMatcher(steerer=steerer, steerer_order=4)
 
 # # C8-steering with discretized steerer (recommended)
 # descriptor = dedode_descriptor_B(weights=torch.load("model_weights/B_SO2_Spread_descriptor_setting_B.pth"))
+# steerer_order = 8
 # steerer = DiscreteSteerer(
 #     generator=torch.matrix_exp(
-#         0.25*3.1415*torch.load("model_weights/B_SO2_Spread_steerer_setting_B.pth")
+#         (2 * 3.14159 / steerer_order)
+#         * torch.load("model_weights/B_SO2_Spread_steerer_setting_B.pth")
 #     )
 # )
+# matcher = MaxSimilarityMatcher(steerer=steerer, steerer_order=steerer_order)
 
 # # SO(2)-steering with arbitrary angles (not recommended, but fun)
 # descriptor = dedode_descriptor_B(weights=torch.load("model_weights/B_SO2_Spread_descriptor_setting_B.pth"))
