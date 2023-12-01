@@ -40,10 +40,10 @@ matches_A, matches_B = matcher.to_pixel_coords(
 
 # C8-steering with discretized steerer (recommended)
 detector = dedode_detector_L(weights=torch.load("model_weights/dedode_detector_L.pth"))
-descriptor = dedode_descriptor_B(weights=torch.load("model_weights/B_C4_Perm_descriptor_setting_C.pth"))
+descriptor = dedode_descriptor_B(weights=torch.load("model_weights/B_SO2_Spread_descriptor_setting_B.pth"))
 steerer = DiscreteSteerer(
     generator=torch.matrix_exp(
-        0.25*3.1415*torch.load("model_weights/B_C4_Perm_steerer_setting_C.pth")
+        0.25*3.1415*torch.load("model_weights/B_SO2_Spread_steerer_setting_B.pth")
     )
 )
 matcher = MaxSimilarityMatcher(steerer=steerer, steerer_order=8)
