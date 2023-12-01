@@ -17,6 +17,7 @@ bash download_weights.sh
 ```
 Matching example using a steerer:
 ```python
+from PIL import Image
 from DeDoDe import dedode_detector_L, dedode_descriptor_B
 from rotation_steerers.steerers import DiscreteSteerer, ContinuousSteerer
 from rotation_steerers.matchers.max_similarity import MaxSimilarityMatcher, ContinuousMaxSimilarityMatcher
