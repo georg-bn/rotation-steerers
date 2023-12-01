@@ -12,9 +12,8 @@ To download model weights needed for the demo and put them in a new folder `mode
 ```
 bash download_weights.sh
 ```
-Further model weights are found in the release TODO-LINK.
 
-We will publish training code shortly.
+We will publish training code and further model weights shortly.
 
 ## Citation
 ```
@@ -22,4 +21,4 @@ TODO
 ```
 
 ## License
-Our code is has MIT license. DeDoDe-G uses a DINOv2 backbone which has an Apache-2 license.
+Our code has an MIT license. DeDoDe-G uses a DINOv2 backbone which has an Apache-2 license.
