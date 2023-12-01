@@ -10,5 +10,5 @@ setup(
     ],
     python_requires='>=3.9.0',
     version="0.0.1",
-    author="x",
+    author="Georg Bökman",
 )
