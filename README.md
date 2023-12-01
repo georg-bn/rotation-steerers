@@ -16,6 +16,7 @@ To download model weights needed for the demo and put them in a new folder `mode
 ```
 bash download_weights.sh
 ```
+The weights are uploaded to [releases](https://github.com/georg-bn/rotation-steerers/releases).
 
 We will publish training code and further model weights shortly.
 
@@ -37,7 +38,7 @@ We consider steerers for the group C4 of quarter turn rotations as well as the f
 
 Here we provide the gif version of Figure 4 in the paper. We show how the eigenvalues of the steerer evolve in the complex plane during training when we train the steerer and descriptor jointly. The first three correspond to a C4-steerer and the last two show the Lie algebra generator of an SO(2)-steerer.
 
-<img src="eigen_gifs/C4_standard_init.gif" width="200"><img src="eigen_gifs/C4_perm_init.gif" width="200"><img src="eigen_gifs/C4_inv_init.gif" width="200"><img src="eigen_gifs/SO2_standard_init.gif" width="200"><img src="eigen_gifs/SO2_spread_init.gif" width="200">
+<img src="eigen_gifs/C4_standard_init.gif" width="300"><img src="eigen_gifs/C4_perm_init.gif" width="300"><img src="eigen_gifs/C4_inv_init.gif" width="300"><img src="eigen_gifs/SO2_standard_init.gif" width="300"><img src="eigen_gifs/SO2_spread_init.gif" width="300">
 
 ## Citation
 ```
