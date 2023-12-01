@@ -22,9 +22,6 @@ from DeDoDe import dedode_detector_L, dedode_descriptor_B
 from rotation_steerers.steerers import DiscreteSteerer, ContinuousSteerer
 from rotation_steerers.matchers.max_similarity import MaxSimilarityMatcher, ContinuousMaxSimilarityMatcher
 
-# Detection of keypoints (as for ordinary DeDoDe)
-detector = dedode_detector_L(weights=torch.load("model_weights/dedode_detector_L.pth"))
-
 im_A_path = "example_images/im_A_rot.jpg"
 im_B_path = "example_images/im_B.jpg"
 im_A = Image.open(im_A_path)
@@ -32,52 +29,33 @@ im_B = Image.open(im_B_path)
 w_A, h_A = im_A.size
 w_B, h_B = im_B.size
 
+# Detection of keypoints (as for ordinary DeDoDe)
+detector = dedode_detector_L(weights=torch.load("model_weights/dedode_detector_L.pth"))
 detections_A = detector.detect_from_path(im_A_path, num_keypoints = 10_000)
 keypoints_A, P_A = detections_A["keypoints"], detections_A["confidence"]
 detections_B = detector.detect_from_path(im_B_path, num_keypoints = 10_000)
 keypoints_B, P_B = detections_B["keypoints"], detections_B["confidence"]
 
+# We show three example matching strategies here (comment/uncomment as required)
 # C4-steering
 descriptor = dedode_descriptor_B(weights=torch.load("model_weights/B_C4_Perm_descriptor_setting_C.pth"))
 steerer = DiscreteSteerer(generator=torch.load("model_weights/B_C4_Perm_steerer_setting_C.pth"))
 matcher = MaxSimilarityMatcher(steerer=steerer, steerer_order=4)
 
-matches_A, matches_B, batch_ids = matcher.match(
-    keypoints_A, descriptions_A,
-    keypoints_B, descriptions_B,
-    P_A = P_A, P_B = P_B,
-    normalize = True, inv_temp=20, threshold = 0.01
-)
-matches_A, matches_B = matcher.to_pixel_coords(
-    matches_A, matches_B, 
-    h_A, w_A, h_B, w_B,
-)
+# # C8-steering with discretized steerer (recommended)
+# descriptor = dedode_descriptor_B(weights=torch.load("model_weights/B_SO2_Spread_descriptor_setting_B.pth"))
+# steerer = DiscreteSteerer(
+#     generator=torch.matrix_exp(
+#         0.25*3.1415*torch.load("model_weights/B_SO2_Spread_steerer_setting_B.pth")
+#     )
+# )
 
-# C8-steering with discretized steerer (recommended)
-descriptor = dedode_descriptor_B(weights=torch.load("model_weights/B_SO2_Spread_descriptor_setting_B.pth"))
-steerer = DiscreteSteerer(
-    generator=torch.matrix_exp(
-        0.25*3.1415*torch.load("model_weights/B_SO2_Spread_steerer_setting_B.pth")
-    )
-)
-matcher = MaxSimilarityMatcher(steerer=steerer, steerer_order=8)
+# # SO(2)-steering with arbitrary angles (not recommended, but fun)
+# descriptor = dedode_descriptor_B(weights=torch.load("model_weights/B_SO2_Spread_descriptor_setting_B.pth"))
+# steerer = ContinuousSteerer(generator=torch.load("model_weights/B_SO2_Spread_steerer_setting_B.pth"))
+# matcher = ContinuousMaxSimilarityMatcher(steerer=steerer, angles=[0.2, 1.2879, 3.14])
 
-matches_A, matches_B, batch_ids = matcher.match(
-    keypoints_A, descriptions_A,
-    keypoints_B, descriptions_B,
-    P_A = P_A, P_B = P_B,
-    normalize = True, inv_temp=20, threshold = 0.01
-)
-matches_A, matches_B = matcher.to_pixel_coords(
-    matches_A, matches_B, 
-    h_A, w_A, h_B, w_B,
-)
-
-# SO(2)-steering with arbitrary angles (not recommended, but fun)
-descriptor = dedode_descriptor_B(weights=torch.load("model_weights/B_SO2_Spread_descriptor_setting_B.pth"))
-steerer = ContinuousSteerer(generator=torch.load("model_weights/B_SO2_Spread_steerer_setting_B.pth"))
-matcher = ContinuousMaxSimilarityMatcher(steerer=steerer, angles=[0.2, 1.2879, 3.14])
-
+# Match descriptions (API as in DeDoDe)
 matches_A, matches_B, batch_ids = matcher.match(
     keypoints_A, descriptions_A,
     keypoints_B, descriptions_B,
