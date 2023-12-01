@@ -21,8 +21,22 @@ from DeDoDe import dedode_detector_L, dedode_descriptor_B
 from rotation_steerers.steerers import DiscreteSteerer, ContinuousSteerer
 from rotation_steerers.matchers.max_similarity import MaxSimilarityMatcher, ContinuousMaxSimilarityMatcher
 
-# C4-steering
+# Detection of keypoints (as for ordinary DeDoDe)
 detector = dedode_detector_L(weights=torch.load("model_weights/dedode_detector_L.pth"))
+
+im_A_path = "example_images/im_A_rot.jpg"
+im_B_path = "example_images/im_B.jpg"
+im_A = Image.open(im_A_path)
+im_B = Image.open(im_B_path)
+w_A, h_A = im_A.size
+w_B, h_B = im_B.size
+
+detections_A = detector.detect_from_path(im_A_path, num_keypoints = 10_000)
+keypoints_A, P_A = detections_A["keypoints"], detections_A["confidence"]
+detections_B = detector.detect_from_path(im_B_path, num_keypoints = 10_000)
+keypoints_B, P_B = detections_B["keypoints"], detections_B["confidence"]
+
+# C4-steering
 descriptor = dedode_descriptor_B(weights=torch.load("model_weights/B_C4_Perm_descriptor_setting_C.pth"))
 steerer = DiscreteSteerer(generator=torch.load("model_weights/B_C4_Perm_steerer_setting_C.pth"))
 matcher = MaxSimilarityMatcher(steerer=steerer, steerer_order=4)
@@ -39,7 +53,6 @@ matches_A, matches_B = matcher.to_pixel_coords(
 )
 
 # C8-steering with discretized steerer (recommended)
-detector = dedode_detector_L(weights=torch.load("model_weights/dedode_detector_L.pth"))
 descriptor = dedode_descriptor_B(weights=torch.load("model_weights/B_SO2_Spread_descriptor_setting_B.pth"))
 steerer = DiscreteSteerer(
     generator=torch.matrix_exp(
@@ -60,7 +73,6 @@ matches_A, matches_B = matcher.to_pixel_coords(
 )
 
 # SO(2)-steering with arbitrary angles (not recommended, but fun)
-detector = dedode_detector_L(weights=torch.load("model_weights/dedode_detector_L.pth"))
 descriptor = dedode_descriptor_B(weights=torch.load("model_weights/B_SO2_Spread_descriptor_setting_B.pth"))
 steerer = ContinuousSteerer(generator=torch.load("model_weights/B_SO2_Spread_steerer_setting_B.pth"))
 matcher = MaxSimilarityMatcher(steerer=steerer, angles=[0.2, 1.2879, 3.14])
