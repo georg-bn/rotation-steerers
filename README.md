@@ -75,7 +75,7 @@ matches_A, matches_B = matcher.to_pixel_coords(
 # SO(2)-steering with arbitrary angles (not recommended, but fun)
 descriptor = dedode_descriptor_B(weights=torch.load("model_weights/B_SO2_Spread_descriptor_setting_B.pth"))
 steerer = ContinuousSteerer(generator=torch.load("model_weights/B_SO2_Spread_steerer_setting_B.pth"))
-matcher = MaxSimilarityMatcher(steerer=steerer, angles=[0.2, 1.2879, 3.14])
+matcher = ContinuousMaxSimilarityMatcher(steerer=steerer, angles=[0.2, 1.2879, 3.14])
 
 matches_A, matches_B, batch_ids = matcher.match(
     keypoints_A, descriptions_A,
