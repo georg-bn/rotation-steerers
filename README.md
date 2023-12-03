@@ -2,7 +2,7 @@ Steerers: A framework for rotation equivariant keypoint descriptors
 ---
 TODO: paper link
 
-A steerer is a linear map that modifies keypoint descriptions as if they were obtained from a rotated image. More info [below](#short-summary).
+A steerer for D-dimensional keypoint descriptions is a DxD matrix that transforms the descriptions as if they were computed from a rotated image. More info [below](#short-summary).
 
 <img src="example_images/method.png" width="500">
 
