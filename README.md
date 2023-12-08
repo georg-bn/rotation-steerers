@@ -1,8 +1,11 @@
 Steerers: A framework for rotation equivariant keypoint descriptors
 ---
-TODO: paper link
+Georg Bökman, Johan Edstedt, Michael Felsberg, Fredrik Kahl
 
-A steerer is a linear map that modifies keypoint descriptions as if they were obtained from a rotated image. More info [below](#short-summary).
+[arXiv](https://arxiv.org/abs/2312.02152)
+[pdf](https://arxiv.org/pdf/2312.02152.pdf)
+
+A steerer for D-dimensional keypoint descriptions is a DxD matrix that transforms the descriptions as if they were computed from a rotated image. More info [below](#short-summary).
 
 <img src="example_images/method.png" width="500">
 
@@ -98,8 +101,15 @@ Here we provide the gif version of Figure 4 in the paper. We show how the eigenv
 <img src="eigen_gifs/C4_standard_init.gif" width="250"><img src="eigen_gifs/C4_perm_init.gif" width="250"><img src="eigen_gifs/C4_inv_init.gif" width="250"><img src="eigen_gifs/SO2_standard_init.gif" width="250"><img src="eigen_gifs/SO2_spread_init.gif" width="250">
 
 ## Citation
-```
-TODO
+```tex
+@article{bokman2023steerers,
+      title={{Steerers: A framework for rotation equivariant keypoint descriptors}}, 
+      author={Georg B{\"o}kman and Johan Edstedt and Michael Felsberg and Fredrik Kahl},
+      year={2023},
+      eprint={2312.02152},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
+}
 ```
 
 ## License
