@@ -1,15 +1,13 @@
 import torch
 from PIL import Image
 import torch.nn as nn
-import torchvision.models as tvm
 import torch.nn.functional as F
 import numpy as np
 from DeDoDe.utils import dual_softmax_matcher, to_pixel_coords, to_normalized_coords
 
 class DualSoftMaxMatcher(nn.Module):        
-    def __init__(self, *args, projector=torch.nn.Identity(), **kwargs) -> None:
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.projector = projector
 
     @torch.inference_mode()
     def match(self, keypoints_A, descriptions_A, 
@@ -29,8 +27,8 @@ class DualSoftMaxMatcher(nn.Module):
             descriptions_A = steerer.steer_descriptions(descriptions_A)
             descriptions_B = steerer.steer_descriptions(descriptions_B)
         
-        P = dual_softmax_matcher(self.projector(descriptions_A),
-                                 self.projector(descriptions_B), 
+        P = dual_softmax_matcher(descriptions_A,
+                                 descriptions_B, 
                                  normalize = normalize, inv_temperature=inv_temp)
         inds = torch.nonzero((P == P.max(dim=-1, keepdim = True).values) 
                         * (P == P.max(dim=-2, keepdim = True).values) * (P > threshold))

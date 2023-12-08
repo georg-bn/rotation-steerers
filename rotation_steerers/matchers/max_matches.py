@@ -1,18 +1,16 @@
 import torch
 from PIL import Image
 import torch.nn as nn
-import torchvision.models as tvm
 import torch.nn.functional as F
 import numpy as np
 from DeDoDe.utils import dual_softmax_matcher, to_pixel_coords, to_normalized_coords
 from rotation_steerers.matchers.dual_softmax_matcher import DualSoftMaxMatcher
 
 class MaxMatchesMatcher(nn.Module):
-    def __init__(self, steerer_order, steerer, *args, projector=torch.nn.Identity(), **kwargs) -> None:
+    def __init__(self, steerer_order, steerer, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.steerer_order = steerer_order 
         self.steerer = steerer
-        self.projector = projector
 
     @torch.inference_mode()
     def match(self, keypoints_A, descriptions_A, 
@@ -32,8 +30,6 @@ class MaxMatchesMatcher(nn.Module):
         best_num_matches = -1
         matches_A = matches_B = batch_inds = None
         best_power = 0
-        descriptions_A = self.projector(descriptions_A)
-        descriptions_B = self.projector(descriptions_B)
         for power in range(self.steerer_order):
             if power > 0:
                 descriptions_A = self.steerer.steer_descriptions(descriptions_A)
@@ -65,15 +61,16 @@ class MaxMatchesMatcher(nn.Module):
 
 
 class SubsetMatcher(nn.Module):
-    def __init__(self, steerer_order, steerer, *args, projector=torch.nn.Identity(), subset_size=1000, **kwargs) -> None:
+    def __init__(self, steerer_order, steerer, *args, subset_size=1000, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.steerer = steerer
         self.subset_size = subset_size
 
-        self.rot_matcher = MaxMatchesMatcher(steerer_order=steerer_order,
-                                             steerer=steerer,
-                                             projector=projector)
-        self.ordinary_matcher = DualSoftMaxMatcher(projector=projector)
+        self.rot_matcher = MaxMatchesMatcher(
+            steerer_order=steerer_order,
+            steerer=steerer,
+        )
+        self.ordinary_matcher = DualSoftMaxMatcher()
 
     @torch.inference_mode()
     def match(self, keypoints_A, descriptions_A, 
@@ -111,11 +108,10 @@ class SubsetMatcher(nn.Module):
 
 
 class ContinuousMaxMatchesMatcher(nn.Module):
-    def __init__(self, angles, steerer, *args, projector=torch.nn.Identity(), **kwargs) -> None:
+    def __init__(self, angles, steerer, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.angles = angles 
         self.steerer = steerer
-        self.projector = projector
 
     @torch.inference_mode()
     def match(self, keypoints_A, descriptions_A, 
@@ -135,8 +131,6 @@ class ContinuousMaxMatchesMatcher(nn.Module):
         best_num_matches = -1
         matches_A = matches_B = batch_inds = None
         best_angle = 0
-        descriptions_A = self.projector(descriptions_A)
-        descriptions_B = self.projector(descriptions_B)
         for angle in self.angles:
             descriptions_A_rot = self.steerer.steer_descriptions(descriptions_A, angle)
 
@@ -167,15 +161,14 @@ class ContinuousMaxMatchesMatcher(nn.Module):
 
 
 class ContinuousSubsetMatcher(nn.Module):
-    def __init__(self, angles, steerer, *args, projector=torch.nn.Identity(), subset_size=1000, **kwargs) -> None:
+    def __init__(self, angles, steerer, *args, subset_size=1000, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.steerer = steerer
         self.subset_size = subset_size
 
         self.rot_matcher = ContinuousMaxMatchesMatcher(angles=angles,
-                                                       steerer=steerer,
-                                                       projector=projector)
-        self.ordinary_matcher = DualSoftMaxMatcher(projector=projector)
+                                                       steerer=steerer)
+        self.ordinary_matcher = DualSoftMaxMatcher()
 
     @torch.inference_mode()
     def match(self, keypoints_A, descriptions_A, 

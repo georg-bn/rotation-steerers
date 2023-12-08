@@ -1,17 +1,15 @@
 import torch
 from PIL import Image
 import torch.nn as nn
-import torchvision.models as tvm
 import torch.nn.functional as F
 import numpy as np
 from DeDoDe.utils import to_pixel_coords, to_normalized_coords
 
 class MaxSimilarityMatcher(nn.Module):        
-    def __init__(self, steerer_order, steerer, *args, projector=torch.nn.Identity(), **kwargs) -> None:
+    def __init__(self, steerer_order, steerer, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.steerer_order = steerer_order 
         self.steerer = steerer
-        self.projector = projector
 
     @torch.inference_mode()
     def match(self, keypoints_A, descriptions_A, 
@@ -29,8 +27,6 @@ class MaxSimilarityMatcher(nn.Module):
             return matches_A, matches_B, inds
 
         matches_A = matches_B = batch_inds = None
-        descriptions_A = self.projector(descriptions_A)
-        descriptions_B = self.projector(descriptions_B)
         if normalize:
             descriptions_B = descriptions_B/descriptions_B.norm(dim=-1, keepdim=True)
         for power in range(self.steerer_order):
@@ -65,12 +61,11 @@ class MaxSimilarityMatcher(nn.Module):
 
 
 class ContinuousMaxSimilarityMatcher(nn.Module):        
-    def __init__(self, angles, *args, steerer=None, projector=torch.nn.Identity(), **kwargs) -> None:
+    def __init__(self, angles, *args, steerer=None, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         # assumes no repeated entires in rots
         self.angles = angles 
         self.steerer = steerer
-        self.projector = projector
 
     @torch.inference_mode()
     def match(self, keypoints_A, descriptions_A, 
@@ -88,8 +83,6 @@ class ContinuousMaxSimilarityMatcher(nn.Module):
             return matches_A, matches_B, inds
 
         matches_A = matches_B = batch_inds = None
-        descriptions_A = self.projector(descriptions_A)
-        descriptions_B = self.projector(descriptions_B)
         if normalize:
             descriptions_B = descriptions_B/descriptions_B.norm(dim=-1, keepdim=True)
         for angle in self.angles:
