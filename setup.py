@@ -6,9 +6,9 @@ setup(
         "rotation_steerers*"
     ]),
     install_requires=[
-        "DeDoDe @ git+https://github.com/Parskatt/DeDoDe.git@dedode_pretrained_models",
+        "DeDoDe",
     ],
     python_requires='>=3.9.0',
-    version="0.0.1",
+    version="0.0.2",
     author="Georg Bökman",
 )

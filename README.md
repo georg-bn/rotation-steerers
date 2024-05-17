@@ -10,10 +10,9 @@ A steerer for D-dimensional keypoint descriptions is a DxD matrix that transform
 <img src="example_images/method.png" width="500">
 
 For running the code, create a new virtual environment of your preference (e.g. conda) with `python>=3.9`, `jupyter notebook` and GPU-enabled PyTorch.
-Then install the `rotation_steerers` package using pip (this automatically installs DeDoDe from GitHub as well, see `setup.py`): 
-```
-pip install .
-```
+Clone this repository with DeDoDe as submodule (`git clone --recursive-submodules git@github.com:georg-bn/rotation-steerers.git`).
+Then install using `bash setup.sh`.
+
 The weights are uploaded to [releases](https://github.com/georg-bn/rotation-steerers/releases). To download model weights needed for the demo and put them in a new folder `model_weights`, run
 ```
 bash download_weights.sh
@@ -78,7 +77,9 @@ matches_A, matches_B = matcher.to_pixel_coords(
 
 See the example notebook [demo.ipynb](demo.ipynb) for more simple matching examples.
 
-We will publish training code and further model weights shortly.
+## Training
+Follow the instructions from [DeDoDe](DeDoDe/README.md) to get the data and annotations set up.
+Representative experiments are present in the [experiments](experiments) folder.
 
 ## Short summary
 A steerer is a linear map that modifies keypoint descriptions as if they were obtained from a rotated image.

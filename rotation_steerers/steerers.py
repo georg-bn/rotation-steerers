@@ -5,7 +5,7 @@ import torch.nn.functional as F
 class DiscreteSteerer(torch.nn.Module):
     def __init__(self, generator):
         super().__init__()
-        self.generator = generator
+        self.generator = torch.nn.Parameter(generator)
 
     def forward(self, x):
         return F.linear(x, self.generator)
@@ -21,7 +21,7 @@ class DiscreteSteerer(torch.nn.Module):
 class ContinuousSteerer(torch.nn.Module):
     def __init__(self, generator):
         super().__init__()
-        self.generator = generator
+        self.generator = torch.nn.Parameter(generator)
 
     def forward(self, x, angle_radians):
         return F.linear(x, torch.matrix_exp(angle_radians * self.generator))

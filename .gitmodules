@@ -1,0 +1,3 @@
+[submodule "DeDoDe"]
+	path = DeDoDe
+	url = git@github.com:georg-bn/DeDoDe
