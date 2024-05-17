@@ -2,6 +2,8 @@ Steerers: A framework for rotation equivariant keypoint descriptors
 ---
 Georg Bökman, Johan Edstedt, Michael Felsberg, Fredrik Kahl
 
+Oral presentation @ CVPR 2024
+
 [arXiv](https://arxiv.org/abs/2312.02152)
 [pdf](https://arxiv.org/pdf/2312.02152.pdf)
 
