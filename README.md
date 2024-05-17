@@ -80,7 +80,7 @@ matches_A, matches_B = matcher.to_pixel_coords(
 See the example notebook [demo.ipynb](demo.ipynb) for more simple matching examples.
 
 ## Training
-Follow the instructions from [DeDoDe](DeDoDe/README.md) to get the data and annotations set up.
+Follow the instructions from [DeDoDe](https://github.com/georg-bn/DeDoDe/#training-dedode) to get the data and annotations set up.
 Representative experiments are present in the [experiments](experiments) folder.
 
 ## Short summary
