@@ -12,7 +12,7 @@ A steerer for D-dimensional keypoint descriptions is a DxD matrix that transform
 <img src="example_images/method.png" width="500">
 
 For running the code, create a new virtual environment of your preference (e.g. conda) with `python>=3.9`, `jupyter notebook` and GPU-enabled PyTorch.
-Clone this repository with DeDoDe as submodule (`git clone --recursive-submodules git@github.com:georg-bn/rotation-steerers.git`).
+Clone this repository with DeDoDe as submodule (`git clone --recurse-submodules git@github.com:georg-bn/rotation-steerers.git`).
 Then install using `bash setup.sh`.
 
 The weights are uploaded to [releases](https://github.com/georg-bn/rotation-steerers/releases). To download model weights needed for the demo and put them in a new folder `model_weights`, run
