@@ -6,6 +6,7 @@ Oral presentation @ CVPR 2024
 
 [arXiv](https://arxiv.org/abs/2312.02152)
 [pdf](https://arxiv.org/pdf/2312.02152.pdf)
+[colab-demo](https://colab.research.google.com/drive/1qD7xDrTWXG8aiVhQ0i32_wTcLOGl1Hjt?usp=sharing)
 
 A steerer for D-dimensional keypoint descriptions is a DxD matrix that transforms the descriptions as if they were computed from a rotated image. More info [below](#short-summary).
 
@@ -77,7 +78,7 @@ matches_A, matches_B = matcher.to_pixel_coords(
 )
 ```
 
-See the example notebook [demo.ipynb](demo.ipynb) for more simple matching examples.
+See the example notebook [colab-demo](https://colab.research.google.com/drive/1qD7xDrTWXG8aiVhQ0i32_wTcLOGl1Hjt?usp=sharing) for more simple matching examples.
 
 ## Training
 Follow the instructions from [DeDoDe](https://github.com/georg-bn/DeDoDe/#training-dedode) to get the data and annotations set up.
