@@ -76,45 +76,51 @@ def train(detector_weights):
 
     generator = torch.block_diag(
         torch.zeros(
-            [NUM_PROTOTYPES // 2,
-             NUM_PROTOTYPES // 2],
+            [NUM_PROTOTYPES - 12 * (NUM_PROTOTYPES // 14),
+             NUM_PROTOTYPES - 12 * (NUM_PROTOTYPES // 14)],
             device='cuda',
         ),
         *(
             torch.tensor([[0., 1],
                           [-1, 0]],
-                         device='cuda')
-            for _ in range(NUM_PROTOTYPES // 8)
+                         device='cuda',
+                        )
+            for _ in range(NUM_PROTOTYPES // 14)
         ),
         *(
             torch.tensor([[0., 2],
                           [-2, 0]],
-                         device='cuda')
-            for _ in range(NUM_PROTOTYPES // 16)
+                         device='cuda',
+                        )
+            for _ in range(NUM_PROTOTYPES // 14)
         ),
         *(
             torch.tensor([[0., 3],
                           [-3, 0]],
-                         device='cuda')
-            for _ in range(NUM_PROTOTYPES // 32)
+                         device='cuda',
+                        )
+            for _ in range(NUM_PROTOTYPES // 14)
         ),
         *(
             torch.tensor([[0., 4],
                           [-4, 0]],
-                         device='cuda')
-            for _ in range(NUM_PROTOTYPES // 64)
+                         device='cuda',
+                        )
+            for _ in range(NUM_PROTOTYPES // 14)
         ),
         *(
             torch.tensor([[0., 5],
                           [-5, 0]],
-                         device='cuda')
-            for _ in range(NUM_PROTOTYPES // 128)
+                         device='cuda',
+                        )
+            for _ in range(NUM_PROTOTYPES // 14)
         ),
         *(
             torch.tensor([[0., 6],
                           [-6, 0]],
-                         device='cuda')
-            for _ in range(NUM_PROTOTYPES // 128)
+                         device='cuda',
+                        )
+            for _ in range(NUM_PROTOTYPES // 14)
         ),
     )
     steerer = ContinuousSteerer(generator)
